@@ -1,6 +1,6 @@
 
 using PaymentGateway.Api.Models.Requests;
-using PaymentGateway.Api.Validations ;
+using PaymentGateway.Api.Validations;
 
 
 namespace PaymentGateway.Api.Tests.Validations;
@@ -127,8 +127,8 @@ public class PaymentRequestValidatorTests
     [Test]
     public void ExpiryDate_NextYearSameMonth_IsValid()
     {
-    
-    
+
+
         var request = ValidRequest();
         var now = DateTime.UtcNow;
         request.ExpiryMonth = now.Month;
@@ -194,7 +194,7 @@ public class PaymentRequestValidatorTests
     [Test]
     public void Amount_Zero_IsValid()
     {
-       
+
         var request = ValidRequest();
         request.Amount = 0;
         Assert.That(_validator.Validate(request), Has.None.Contains("Amount"));
@@ -245,7 +245,7 @@ public class PaymentRequestValidatorTests
     [Test]
     public void Cvv_LeadingZero_IsValid()
     {
-       
+
         // "012" must remain a valid 3-digit CVV, not become 12.
         var request = ValidRequest();
         request.Cvv = "012";

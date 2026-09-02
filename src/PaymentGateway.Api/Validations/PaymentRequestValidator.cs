@@ -64,14 +64,14 @@ public class PaymentRequestValidator
 
     private static void ValidateAmount(PostPaymentRequest request, List<string> errors)
     {
-      
+
         if (request.Amount is null)
         {
             errors.Add("Amount is required.");
             return;
         }
 
-      
+
         if (request.Amount < 0)
         {
             errors.Add("Amount must be zero or a positive integer.");
@@ -88,6 +88,3 @@ public class PaymentRequestValidator
         }
     }
 }
-
-
-

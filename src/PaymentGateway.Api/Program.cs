@@ -1,6 +1,6 @@
+using PaymentGateway.Api.Clients;
 using PaymentGateway.Api.Services;
 using PaymentGateway.Api.Validations;
-using PaymentGateway.Api.Clients;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -35,4 +35,4 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
-public partial class Program { } 
+public partial class Program { }

@@ -1,11 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-using PaymentGateway.Api.Models.Responses;
-using PaymentGateway.Api.Services;
 using PaymentGateway.Api.Clients;
 using PaymentGateway.Api.Clients.Models;
 using PaymentGateway.Api.Enums;
 using PaymentGateway.Api.Models.Requests;
+using PaymentGateway.Api.Models.Responses;
+using PaymentGateway.Api.Services;
 using PaymentGateway.Api.Validations;
 
 namespace PaymentGateway.Api.Controllers;
@@ -15,7 +15,7 @@ namespace PaymentGateway.Api.Controllers;
 public class PaymentsController : ControllerBase
 {
     private readonly PaymentsRepository _paymentsRepository;
-       private readonly PaymentRequestValidator _validator;
+    private readonly PaymentRequestValidator _validator;
     private readonly IAcquiringBankClient _bankClient;
     public PaymentsController(PaymentsRepository paymentsRepository, PaymentRequestValidator validator, IAcquiringBankClient bankClient)
     {
@@ -23,23 +23,23 @@ public class PaymentsController : ControllerBase
         _validator = validator;
         _bankClient = bankClient;
     }
- 
 
-    [HttpGet("{id:guid}" , Name = "GetPayment")]
+
+    [HttpGet("{id:guid}", Name = "GetPayment")]
     public ActionResult<GetPaymentResponse?> GetPayment(Guid id)
     {
         var payment = _paymentsRepository.Get(id);
 
-            if (payment is null)
+        if (payment is null)
         {
             return NotFound();
         }
 
         return Ok(ToGetPaymentResponse(payment));
     }
-     [HttpPost]
+    [HttpPost]
     public async Task<ActionResult<PostPaymentResponse>> CreatePaymentAsync(
-        PostPaymentRequest request, CancellationToken cancellationToken)
+       PostPaymentRequest request, CancellationToken cancellationToken)
     {
         var validationErrors = _validator.Validate(request);
 
@@ -94,8 +94,8 @@ public class PaymentsController : ControllerBase
         Cvv = request.Cvv
     };
 
-    
-      private static GetPaymentResponse ToGetPaymentResponse(PostPaymentResponse payment) => new()
+
+    private static GetPaymentResponse ToGetPaymentResponse(PostPaymentResponse payment) => new()
     {
         Id = payment.Id,
         Status = payment.Status,
