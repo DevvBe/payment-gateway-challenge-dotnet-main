@@ -3,7 +3,7 @@ using PaymentGateway.Api.Models.Requests;
 using PaymentGateway.Api.Validations ;
 
 
-namespace PaymentGateway.Api.Tests.Validation;
+namespace PaymentGateway.Api.Tests.Validations;
 
 [TestFixture]
 public class PaymentRequestValidatorTests
@@ -194,7 +194,7 @@ public class PaymentRequestValidatorTests
     [Test]
     public void Amount_Zero_IsValid()
     {
-        // A $0 authorization is a legitimate card-verification use case.
+       
         var request = ValidRequest();
         request.Amount = 0;
         Assert.That(_validator.Validate(request), Has.None.Contains("Amount"));
