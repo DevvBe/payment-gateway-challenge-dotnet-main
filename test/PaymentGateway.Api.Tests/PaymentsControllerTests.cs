@@ -3,9 +3,10 @@ using System.Net.Http.Json;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
 
-using PaymentGateway.Api.Controllers;
+
 using PaymentGateway.Api.Models.Responses;
 using PaymentGateway.Api.Services;
+using PaymentGateway.Api.Enums ;
 
 namespace PaymentGateway.Api.Tests;
 
@@ -20,17 +21,18 @@ public class PaymentsControllerTests
         var payment = new PostPaymentResponse
         {
             Id = Guid.NewGuid(),
+            Status = PaymentStatus.Authorized,
             ExpiryYear = _random.Next(2023, 2030),
             ExpiryMonth = _random.Next(1, 12),
             Amount = _random.Next(1, 10000),
-            CardNumberLastFour = _random.Next(1111, 9999),
+            CardNumberLastFour = _random.Next(1111, 9999).ToString(),
             Currency = "GBP"
         };
 
         var paymentsRepository = new PaymentsRepository();
         paymentsRepository.Add(payment);
 
-        var webApplicationFactory = new WebApplicationFactory<PaymentsController>();
+        var webApplicationFactory = new WebApplicationFactory<Program>();
         var client = webApplicationFactory.WithWebHostBuilder(builder =>
             builder.ConfigureServices(services => ((ServiceCollection)services)
                 .AddSingleton(paymentsRepository)))
@@ -38,7 +40,7 @@ public class PaymentsControllerTests
 
         // Act
         var response = await client.GetAsync($"/api/Payments/{payment.Id}");
-        var paymentResponse = await response.Content.ReadFromJsonAsync<PostPaymentResponse>();
+        var paymentResponse = await response.Content.ReadFromJsonAsync<GetPaymentResponse>();
         
         // Assert
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
@@ -49,7 +51,7 @@ public class PaymentsControllerTests
     public async Task Returns404IfPaymentNotFound()
     {
         // Arrange
-        var webApplicationFactory = new WebApplicationFactory<PaymentsController>();
+        var webApplicationFactory = new WebApplicationFactory<Program>();
         var client = webApplicationFactory.CreateClient();
         
         // Act

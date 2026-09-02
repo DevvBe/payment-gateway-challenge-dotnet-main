@@ -7,7 +7,7 @@ namespace PaymentGateway.Api.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class PaymentsController : Controller
+public class PaymentsController : ControllerBase
 {
     private readonly PaymentsRepository _paymentsRepository;
 
@@ -17,10 +17,27 @@ public class PaymentsController : Controller
     }
 
     [HttpGet("{id:guid}")]
-    public async Task<ActionResult<PostPaymentResponse?>> GetPaymentAsync(Guid id)
+    public ActionResult<GetPaymentResponse?> GetPayment(Guid id)
     {
         var payment = _paymentsRepository.Get(id);
 
-        return new OkObjectResult(payment);
+            if (payment is null)
+        {
+            return NotFound();
+        }
+
+        return Ok(ToGetPaymentResponse(payment));
     }
+
+    
+      private static GetPaymentResponse ToGetPaymentResponse(PostPaymentResponse payment) => new()
+    {
+        Id = payment.Id,
+        Status = payment.Status,
+        CardNumberLastFour = payment.CardNumberLastFour,
+        ExpiryMonth = payment.ExpiryMonth,
+        ExpiryYear = payment.ExpiryYear,
+        Currency = payment.Currency,
+        Amount = payment.Amount
+    };
 }

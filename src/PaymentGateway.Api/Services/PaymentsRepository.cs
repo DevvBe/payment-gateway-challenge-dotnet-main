@@ -1,18 +1,20 @@
 ﻿using PaymentGateway.Api.Models.Responses;
+using System.Collections.Concurrent;
 
 namespace PaymentGateway.Api.Services;
 
 public class PaymentsRepository
 {
-    public List<PostPaymentResponse> Payments = new();
+     private readonly ConcurrentDictionary<Guid, PostPaymentResponse> _payments = new();
     
     public void Add(PostPaymentResponse payment)
     {
-        Payments.Add(payment);
+        _payments[payment.Id] = payment;
     }
 
-    public PostPaymentResponse Get(Guid id)
+    public PostPaymentResponse? Get(Guid id)
     {
-        return Payments.FirstOrDefault(p => p.Id == id);
+          _payments.TryGetValue(id, out var payment);
+        return payment;
     }
 }
